@@ -29,7 +29,7 @@
         <TextView
             android:id="@+id/price"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1.00"
             android:text="Price"/>
     </LinearLayout>
@@ -42,7 +42,7 @@
         <TextView
             android:id="@+id/publisher"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:text="Publisher"
             android:layout_weight="1.07"/>
 
