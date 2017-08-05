@@ -118,43 +118,63 @@ public final class QueryUtils {
         List<Book> books = new ArrayList<>();
 
         try {
+            // Main JSON object from the response
             JSONObject jsonObject = new JSONObject(bookJSON);
 
+            // Parsed array of "items"
             JSONArray items = jsonObject.getJSONArray("items");
 
             for (int i = 0; i < items.length(); i++) {
+                // Go through each index of an array to extract appropriate values of objects
                 JSONObject item = items.getJSONObject(i);
+                // "volumeInfo is part of array "item" that has additional objects that we need
                 JSONObject volumeInfo = item.getJSONObject("volumeInfo");
-                JSONObject saleInfo = item.getJSONObject("saleInfo");
-                JSONObject accessInfo = item.getJSONObject("accessInfo");
-
                 String title = volumeInfo.getString("title");
-                String publisher = volumeInfo.getString("publisher");
-                JSONObject listPrice;
-                String price;
-                String link;
-                URL url;
 
+                // Check if "authors" field exist in "volumeInfo" object, if so get a JSONArray
+                // Go through each index and store each author's name in a String variable
+                // If no such field exists, use default value
                 String author = "";
-                JSONArray authors = volumeInfo.getJSONArray("authors");
-                for (int j = 0; j < authors.length(); j++) {
+                if (volumeInfo.has("authors")) {
+                    JSONArray authors = volumeInfo.getJSONArray("authors");
+                    for (int j = 0; j < authors.length(); j++) {
                     author = authors.getString(j) + " " + author;
+                }} else {
+                    author = "No author available";
                 }
 
+                // If no publisher available, use default text
+                String publisher;
+                if (volumeInfo.has("publisher")) {
+                    publisher = volumeInfo.getString("publisher");
+                } else {
+                    publisher = "No publisher available";
+                }
+
+                // Check if "listPrice" exists in "saleInfo" JSONObject, if so get "amount"
+                // If not use default text
+                JSONObject saleInfo = item.getJSONObject("saleInfo");
+                String price;
                 if (saleInfo.has("listPrice")) {
-                    listPrice = saleInfo.getJSONObject("listPrice");
+                    JSONObject listPrice = saleInfo.getJSONObject("listPrice");
                     price = "$"+ listPrice.getString("amount");;
                 } else {
                     price = "No price";
                 }
 
+                // Check if "webReaderLink" exists in "accessInfo" JSONObject, if so get its value
+                // If not, set link to a random website
+                JSONObject accessInfo = item.getJSONObject("accessInfo");
+                String link;
                 if (accessInfo.has("webReaderLink")) {
                     link = accessInfo.getString("webReaderLink");
                 } else {
-                    link = "";
+                    link = "google.com";
                 }
 
+                // Create new Book object with approriate parameters
                 book = new Book(title, author, price, publisher, link);
+                // Add Book objects to an ArrayList
                 books.add(book);
             }
         } catch (JSONException e) {
@@ -165,14 +185,18 @@ public final class QueryUtils {
 
     public static List<Book> fetchBookData(String requestUrl) {
         Log.i(LOG_TAG, "This is fetchBookData");
+        // Get a query url as a String and cast it as an URL class
         URL url = createUrl(requestUrl);
 
         String jsonResponse = null;
         try {
+            // Use the new URL to make an Http request to API server for Google Books, receive
+            // back a JSON string with requested values
             jsonResponse = makeHttpRequest(url);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
+        // Parse the JSON list and store it as a List<Book> object and return it to the UI
         return parseJsonData(jsonResponse);
     }
 }

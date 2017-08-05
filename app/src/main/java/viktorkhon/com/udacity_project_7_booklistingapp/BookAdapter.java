@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,17 +47,14 @@ public class BookAdapter extends ArrayAdapter<Book> {
             sample.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Uri webpage = Uri.parse(book.getUrl());
+                    Uri webpage = Uri.parse(book.getStringUrl());
                     // Create a new intent to view the earthquake URI
                     Intent openBrowser = new Intent(Intent.ACTION_VIEW, webpage);
                     // Send the intent to launch a new activity
                     getContext().startActivity(openBrowser);
                 }
             });
-
         }
         return convertView;
-
-        }
     }
-
+}

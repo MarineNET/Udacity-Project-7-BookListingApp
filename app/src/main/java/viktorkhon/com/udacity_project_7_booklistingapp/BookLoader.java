@@ -14,12 +14,11 @@ import static viktorkhon.com.udacity_project_7_booklistingapp.MainActivity.LOG_T
 
 public class BookLoader extends AsyncTaskLoader<List<Book>> {
 
-    /**
-     * Query URL
-     */
+    // Query URL
     private String mUrl;
 
     private List<Book> result;
+
     public BookLoader(Context context, String url) {
         super(context);
         mUrl = url;
@@ -29,9 +28,6 @@ public class BookLoader extends AsyncTaskLoader<List<Book>> {
         Log.i(LOG_TAG, "This is onStartLoading");
         forceLoad();
     }
-
-
-
 
     @Override
     public List<Book> loadInBackground() {
