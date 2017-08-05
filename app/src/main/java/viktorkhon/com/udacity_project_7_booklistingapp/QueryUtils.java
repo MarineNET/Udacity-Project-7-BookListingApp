@@ -124,16 +124,39 @@ public final class QueryUtils {
 
             for (int i = 0; i < items.length(); i++) {
                 JSONObject item = items.getJSONObject(i);
-                JSONObject volume = item.getJSONObject("volumeInfo");
-                String title = volume.getString("title");
+                JSONObject volumeInfo = item.getJSONObject("volumeInfo");
+                JSONObject saleInfo = item.getJSONObject("saleInfo");
+                JSONObject accessInfo = item.getJSONObject("accessInfo");
 
-                //String authors = volume.getString("publisher");
-                //for (int j = 0; j < author.length(); j++) {
-                    //String authors = author.getString(j);
-                    book = new Book(title, "authors", "55", "publisher", "www.google.com");
-                books.add(book);
+                String title = volumeInfo.getString("title");
+                String publisher = volumeInfo.getString("publisher");
+                JSONObject listPrice;
+                String price;
+                String link;
+                URL url;
+
+                String author = "";
+                JSONArray authors = volumeInfo.getJSONArray("authors");
+                for (int j = 0; j < authors.length(); j++) {
+                    author = authors.getString(j) + " " + author;
                 }
-            //}
+
+                if (saleInfo.has("listPrice")) {
+                    listPrice = saleInfo.getJSONObject("listPrice");
+                    price = "$"+ listPrice.getString("amount");;
+                } else {
+                    price = "No price";
+                }
+
+                if (accessInfo.has("webReaderLink")) {
+                    link = accessInfo.getString("webReaderLink");
+                } else {
+                    link = "";
+                }
+
+                book = new Book(title, author, price, publisher, link);
+                books.add(book);
+            }
         } catch (JSONException e) {
             Log.e("QueryUtils", "Problem parsing the book JSON results", e);
         }
