@@ -42,18 +42,27 @@ public class MainActivity extends AppCompatActivity
 
         title = (EditText) findViewById(R.id.editText);
 
-
         mBookAdapter = new BookAdapter(this, new ArrayList<Book>());
 
         bookListView = (ListView) findViewById(R.id.bookListView);
 
         bookListView.setAdapter(mBookAdapter);
 
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        // Class that answers queries about the state of network connectivity.
+        // It also notifies applications when network connectivity changes.
+        ConnectivityManager cm = (ConnectivityManager)
+                // Context.CONNECTIVITY_SERVICE:
+                // Use with getSystemService(Class) to retrieve a ConnectivityManager for handling
+                // management of network connections.
+                getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        // Describes the status of a network interface.
+        // Use getActiveNetworkInfo() to get an instance that represents the current network connection.
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
         final boolean isConnected = activeNetwork != null &&
+                // isConnectedOrConnecting - Indicates whether network connectivity exists or is
+                // in the process of being established
                 activeNetwork.isConnectedOrConnecting();
 
         Button search = (Button) findViewById(R.id.button_search);
@@ -63,6 +72,8 @@ public class MainActivity extends AppCompatActivity
                 searchForText = title.getText().toString().trim();
                 toSearch = JSON_RESPONSE + searchForText;
                 Log.i(LOG_TAG, "This is initLoader");
+                Log.i(LOG_TAG, "This is " + toSearch);
+
                 if (isConnected) {
                     getLoaderManager().initLoader(0, null, MainActivity.this);
                 }
@@ -78,6 +89,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
+
+        // Clear the adapter of previous earthquake data
+        mBookAdapter.clear();
+
         if (data != null && !data.isEmpty()) {
             Log.i(LOG_TAG, "This is onLoadFinished");
             mBookAdapter.addAll(data);
