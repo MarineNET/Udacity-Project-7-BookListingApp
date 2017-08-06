@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity
 
     private TextView emptyView;
 
+    NetworkInfo activeNetwork;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,14 +69,10 @@ public class MainActivity extends AppCompatActivity
 
         // Describes the status of a network interface.
         // Use getActiveNetworkInfo() to get an instance that represents the current network connection.
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-
-        final boolean isConnected = activeNetwork != null &&
-                // isConnectedOrConnecting - Indicates whether network connectivity exists or is
-                // in the process of being established
-                activeNetwork.isConnectedOrConnecting();
+        activeNetwork = cm.getActiveNetworkInfo();
 
         getLoaderManager().initLoader(0, null, MainActivity.this);
+        mProgressBar1.setVisibility(View.GONE);
 
         Button search = (Button) findViewById(R.id.button_search);
         search.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity
                 String finalQuery = query.replace(" ", "+");
 
                 toSearch = REQUEST_URL + finalQuery;
-                if (isConnected) {
+                if (isConnected()) {
                     getLoaderManager().restartLoader(0, null, MainActivity.this);
                     mProgressBar1.setVisibility(View.VISIBLE);
                 } else {
@@ -94,6 +92,14 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+
+    final boolean isConnected() {
+        // isConnectedOrConnecting - Indicates whether network connectivity exists or is
+        // in the process of being established
+        if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
+        } return true;
     }
 
     @Override
@@ -115,6 +121,7 @@ public class MainActivity extends AppCompatActivity
         if (data != null && !data.isEmpty()) {
             mBookAdapter.addAll(data);
             //bookListView.setAdapter(mBookAdapter);
+            bookListView.setAdapter(mBookAdapter);
         }
     }
 
