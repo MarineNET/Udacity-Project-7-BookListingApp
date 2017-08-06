@@ -40,11 +40,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         title = (EditText) findViewById(R.id.editText);
-        mBookAdapter = new BookAdapter(this, new ArrayList<Book>());
         bookListView = (ListView) findViewById(R.id.bookListView);
-        bookListView.setAdapter(mBookAdapter);
         mProgressBar1 = (ProgressBar) findViewById(R.id.progressBar3);
-
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         emptyView = (TextView) findViewById(R.id.empty_view);
 
@@ -75,6 +72,8 @@ public class MainActivity extends AppCompatActivity
 
     private void startApp() {
         if (isConnected()) {
+            mBookAdapter = new BookAdapter(this, new ArrayList<Book>());
+            bookListView.setAdapter(mBookAdapter);
             // If network is available upon launching the app, open emptyView with default text
             bookListView.setEmptyView(emptyView);
             // Keep track of data when screen is rotating
@@ -120,7 +119,6 @@ public class MainActivity extends AppCompatActivity
 
         if (data != null && !data.isEmpty()) {
             mBookAdapter.addAll(data);
-            //bookListView.setAdapter(mBookAdapter);
         }
     }
 

@@ -62,7 +62,7 @@
         android:fontFamily="sans-serif-medium"
         android:paddingTop="16dp"
         android:textAppearance="?android:textAppearanceMedium"
-        android:text="Please enter a book to search"/>
+        android:text="Please enter a book title and click on SEARCH"/>
 
 </RelativeLayout>
 </FrameLayout>
