@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
 
         if (data != null && !data.isEmpty()) {
             mBookAdapter.addAll(data);
-            bookListView.setAdapter(mBookAdapter);
+            //bookListView.setAdapter(mBookAdapter);
         }
     }
 
