@@ -7,13 +7,9 @@ package viktorkhon.com.udacity_project_7_booklistingapp;
 public class Book {
 
     private String mTitle;
-
     private String mAuthors;
-
     private String mPrice;
-
     private String mPublisher;
-
     private String mUrl;
 
     public Book(String title, String authors, String price, String publisher, String url) {

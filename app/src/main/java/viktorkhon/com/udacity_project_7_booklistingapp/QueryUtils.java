@@ -111,7 +111,6 @@ public final class QueryUtils {
         if (TextUtils.isEmpty(bookJSON)) {
             return null;
         }
-
         // Create an empty ArrayList that we can start adding books to
         List<Book> books = new ArrayList<>();
 
@@ -184,12 +183,6 @@ public final class QueryUtils {
     }
 
     public static List<Book> fetchBookData(String requestUrl) {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         // Get a query url as a String and cast it as an URL class
         URL url = createUrl(requestUrl);
 
