@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,14 +27,16 @@ public class MainActivity extends AppCompatActivity
 
     public static final String LOG_TAG = MainActivity.class.getName();
 
-    private static final String JSON_RESPONSE =
+    private static final String REQUEST_URL =
             "https://www.googleapis.com/books/v1/volumes?q=";
 
-    EditText title;
-
-    private String searchForText;
+    private EditText title;
 
     private String toSearch;
+
+    private ProgressBar mProgressBar1;
+
+    private TextView emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,12 @@ public class MainActivity extends AppCompatActivity
         bookListView = (ListView) findViewById(R.id.bookListView);
 
         bookListView.setAdapter(mBookAdapter);
+
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        emptyView = (TextView) findViewById(R.id.empty_view);
+        bookListView.setEmptyView(emptyView);
+
+        mProgressBar1 = (ProgressBar) findViewById(R.id.progressBar3);
 
         // Class that answers queries about the state of network connectivity.
         // It also notifies applications when network connectivity changes.
@@ -65,17 +74,23 @@ public class MainActivity extends AppCompatActivity
                 // in the process of being established
                 activeNetwork.isConnectedOrConnecting();
 
+        getLoaderManager().initLoader(0, null, MainActivity.this);
+
         Button search = (Button) findViewById(R.id.button_search);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchForText = title.getText().toString().trim();
-                toSearch = JSON_RESPONSE + searchForText;
-                Log.i(LOG_TAG, "This is initLoader");
-                Log.i(LOG_TAG, "This is " + toSearch);
+                String query = title.getText().toString();
+                String finalQuery = query.replace(" ", "+");
 
+                toSearch = REQUEST_URL + finalQuery;
                 if (isConnected) {
-                    getLoaderManager().initLoader(0, null, MainActivity.this);
+                    getLoaderManager().restartLoader(0, null, MainActivity.this);
+                    mProgressBar1.setVisibility(View.VISIBLE);
+                } else {
+                    // If no network found, display a text and hide progress bar
+                    emptyView.setText("No internet connection");
+                    mProgressBar1.setVisibility(View.GONE);
                 }
             }
         });
@@ -83,25 +98,28 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Loader<List<Book>> onCreateLoader(int id, Bundle args) {
-        Log.i(LOG_TAG, "This is onCreateLoader");
+
         return new BookLoader(this, toSearch);
     }
 
     @Override
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
-
         // Clear the adapter of previous earthquake data
         mBookAdapter.clear();
+        mProgressBar1.setVisibility(View.GONE);
+
+        // Set empty state text to display "No books found."
+        Log.i(LOG_TAG, "onLoadFinished for emplty view");
+        emptyView.setText("No books found");
 
         if (data != null && !data.isEmpty()) {
-            Log.i(LOG_TAG, "This is onLoadFinished");
             mBookAdapter.addAll(data);
+            //bookListView.setAdapter(mBookAdapter);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<List<Book>> loader) {
-        Log.i(LOG_TAG, "This is onLoaderReset");
         mBookAdapter.clear();
     }
 }

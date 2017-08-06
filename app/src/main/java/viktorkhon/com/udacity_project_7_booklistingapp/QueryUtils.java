@@ -27,8 +27,6 @@ import static viktorkhon.com.udacity_project_7_booklistingapp.MainActivity.LOG_T
 
 public final class QueryUtils {
 
-    static Book book;
-
     private QueryUtils() {
     }
 
@@ -64,7 +62,7 @@ public final class QueryUtils {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
-                Log.e(LOG_TAG, "Status code is  " + urlConnection.getResponseCode());
+                Log.e(LOG_TAG, "Status code is " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "IOException is thrown");
@@ -138,8 +136,9 @@ public final class QueryUtils {
                 if (volumeInfo.has("authors")) {
                     JSONArray authors = volumeInfo.getJSONArray("authors");
                     for (int j = 0; j < authors.length(); j++) {
-                    author = authors.getString(j) + " " + author;
-                }} else {
+                        author = authors.getString(j) + " " + author;
+                    }
+                } else {
                     author = "No author available";
                 }
 
@@ -157,7 +156,8 @@ public final class QueryUtils {
                 String price;
                 if (saleInfo.has("listPrice")) {
                     JSONObject listPrice = saleInfo.getJSONObject("listPrice");
-                    price = "$"+ listPrice.getString("amount");;
+                    price = "$" + listPrice.getString("amount");
+                    ;
                 } else {
                     price = "No price";
                 }
@@ -173,7 +173,7 @@ public final class QueryUtils {
                 }
 
                 // Create new Book object with approriate parameters
-                book = new Book(title, author, price, publisher, link);
+                Book book = new Book(title, author, price, publisher, link);
                 // Add Book objects to an ArrayList
                 books.add(book);
             }
@@ -184,7 +184,12 @@ public final class QueryUtils {
     }
 
     public static List<Book> fetchBookData(String requestUrl) {
-        Log.i(LOG_TAG, "This is fetchBookData");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Get a query url as a String and cast it as an URL class
         URL url = createUrl(requestUrl);
 

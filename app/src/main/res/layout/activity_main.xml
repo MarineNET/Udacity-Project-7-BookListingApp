@@ -42,7 +42,27 @@
         android:id="@+id/bookListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/button_search"/>
+        android:layout_below="@+id/editText"/>
 
-    </RelativeLayout>
+    <ProgressBar
+        android:id="@+id/progressBar3"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+    <!-- Empty view for the list -->
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif-medium"
+        android:paddingTop="16dp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="Please enter a book to search"/>
+
+</RelativeLayout>
 </FrameLayout>

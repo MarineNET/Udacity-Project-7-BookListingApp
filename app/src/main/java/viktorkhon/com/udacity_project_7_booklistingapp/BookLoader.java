@@ -23,19 +23,28 @@ public class BookLoader extends AsyncTaskLoader<List<Book>> {
         super(context);
         mUrl = url;
     }
+
     @Override
     protected void onStartLoading() {
-        Log.i(LOG_TAG, "This is onStartLoading");
-        forceLoad();
+        if (result != null) {
+            deliverResult(result);
+        } else {
+            forceLoad();
+        }
     }
 
     @Override
     public List<Book> loadInBackground() {
-        Log.i(LOG_TAG, "This is loadInBackground");
-        if (mUrl.length() < 1 || mUrl == null) {
+        if (mUrl == null) {
             return null;
         }
         result = QueryUtils.fetchBookData(mUrl);
         return result;
+    }
+
+    @Override
+    public void deliverResult(List<Book> data) {
+        result = data;
+        super.deliverResult(data);
     }
 }
