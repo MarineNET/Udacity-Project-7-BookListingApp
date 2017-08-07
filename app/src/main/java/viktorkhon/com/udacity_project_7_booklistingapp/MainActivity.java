@@ -117,6 +117,8 @@ public class MainActivity extends AppCompatActivity
         mBookAdapter.clear();
         mProgressBar1.setVisibility(View.GONE);
 
+        emptyView.setText("No books available");
+
         if (data != null && !data.isEmpty()) {
             mBookAdapter.addAll(data);
         }
